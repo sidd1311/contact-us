@@ -2,6 +2,8 @@ const express = require('express');
 var bodyParser = require('body-parser');
 const nodemailer = require('nodemailer');
 const mongoose = require('mongoose');
+require('dotenv').config();
+
 
 var app = express();
 
@@ -15,8 +17,6 @@ app.set('view engine', 'ejs');
 
 // In the URL I have changed the database to conatct-db
 mongoose.connect('mongodb+srv://siddbhardwaj2005:GjK7iXeBfRICErMH@cluster0.jzpnccz.mongodb.net/contact-db?retryWrites=true&w=majority&appName=Cluster0', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
 })
 .then(() => console.log('MongoDB connected to contact-db...'))
 .catch(err => console.log(err));
@@ -35,8 +35,8 @@ const transporter = nodemailer.createTransport({
   port: 465,
   secure: true,
   auth: {
-    user: 'siddbhardwaj2005@gmail.com', // Your Gmail email
-    pass: 'nglf yytw syfi wxwh',        // Your Gmail App Password
+    user: process.env.GMAIL_USER, // Your Gmail email
+    pass: process.env.GMAIL_PASS,        // Your Gmail App Password
   }
 });
 
@@ -65,6 +65,8 @@ app.post('/contact', async function (req, res) {
   let em = req.body.email;
   let qu = req.body.query;
   console.log(nm);
+console.log('GMAIL_USER:', process.env.GMAIL_USER);
+console.log('GMAIL_PASS:', process.env.GMAIL_PASS);
 
   try {
     const query = new Query({ name: nm, email: em, query: qu });
